@@ -1,3 +1,9 @@
+// --- Enable scroll animations only once JS is confirmed running ---
+// This applies the hidden starting state for .fade-in elements. If this script
+// fails to load or run, the CSS leaves content visible by default, so the page
+// content can never be permanently hidden.
+document.documentElement.classList.add('js-anim');
+
 // --- Page loader ---
 window.addEventListener('load', () => {
   const loader = document.getElementById('loader');
@@ -6,6 +12,31 @@ window.addEventListener('load', () => {
     setTimeout(() => loader.remove(), 500);
   }
 });
+
+// --- Theme toggle ---
+const themeToggle = document.getElementById('themeToggle');
+
+const ICONS = {
+  dark:  '☀',   // currently dark → click to go light
+  light: '☾',   // currently light → click to go dark
+};
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  if (themeToggle) themeToggle.textContent = ICONS[theme];
+}
+
+// Load saved preference, default to light
+applyTheme(localStorage.getItem('theme') || 'light');
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'light' ? 'dark' : 'light');
+    reinitParticles();
+  });
+}
 
 const navbar = document.getElementById('navbar');
 const navToggle = document.querySelector('.nav-toggle');
@@ -43,19 +74,45 @@ function updateActiveLink() {
 }
 updateActiveLink();
 
-// --- Intersection Observer: fade-in animations + skill bars ---
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.12 });
+// --- Fade-in reveal: IntersectionObserver with a scroll-based fallback ---
+// The fallback guarantees content is never left stuck at opacity:0 if the
+// observer fails to fire (restored scroll position, fast scroll, reduced-motion,
+// or environments where IntersectionObserver doesn't trigger).
+const faders = document.querySelectorAll('.fade-in');
 
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+function revealInView() {
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  faders.forEach(el => {
+    if (el.classList.contains('visible')) return;
+    const r = el.getBoundingClientRect();
+    if (r.top < vh * 0.92 && r.bottom > 0) el.classList.add('visible');
+  });
+}
+
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  faders.forEach(el => observer.observe(el));
+} else {
+  // No IntersectionObserver support: reveal everything immediately.
+  faders.forEach(el => el.classList.add('visible'));
+}
+
+// Safety net: reveal on scroll, load, and resize regardless of the observer.
+window.addEventListener('scroll', revealInView, { passive: true });
+window.addEventListener('resize', revealInView, { passive: true });
+window.addEventListener('load', revealInView);
+revealInView();
 
 // --- Particle canvas ---
+let reinitParticles = () => {};
+
 (function initParticles() {
   if (!canvas) return;
 
@@ -63,8 +120,14 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   let particles = [];
   let animId;
 
-  const COLORS = ['#00b4ff', '#00ffd5', '#ffffff'];
+  const DARK_COLORS  = ['#c4914a', '#d4a86a', '#f0ead8'];
+  const LIGHT_COLORS = ['#b85c38', '#c4724a', '#7a6a58'];
   const COUNT = 55;
+
+  function getColors() {
+    return document.documentElement.getAttribute('data-theme') === 'light'
+      ? LIGHT_COLORS : DARK_COLORS;
+  }
 
   function resize() {
     canvas.width = canvas.offsetWidth;
@@ -72,13 +135,14 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   }
 
   function createParticle() {
+    const colors = getColors();
     return {
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       r: Math.random() * 1.8 + 0.4,
       vx: (Math.random() - 0.5) * 0.4,
       vy: (Math.random() - 0.5) * 0.4,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      color: colors[Math.floor(Math.random() * colors.length)],
       alpha: Math.random() * 0.5 + 0.2,
     };
   }
@@ -99,7 +163,7 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 90) {
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(0, 180, 255, ${0.15 * (1 - dist / 90)})`;
+          ctx.strokeStyle = `rgba(196, 145, 74, ${0.12 * (1 - dist / 90)})`;
           ctx.lineWidth = 0.6;
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
@@ -145,6 +209,13 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     init();
     draw();
   }, { passive: true });
+
+  reinitParticles = () => {
+    cancelAnimationFrame(animId);
+    animId = null;
+    init();
+    draw();
+  };
 
   init();
   draw();

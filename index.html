@@ -6,9 +6,9 @@
   <title>Alex Gerardi: Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='14' fill='%230d0d0d'/><text x='50' y='68' font-family='Space Grotesk,Arial,sans-serif' font-size='44' font-weight='700' fill='%2300b4ff' text-anchor='middle'>AG</text></svg>">
-  <link rel="stylesheet" href="style.css?v=2">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='14' fill='%231c1814'/><text x='50' y='68' font-family='Georgia,serif' font-size='44' font-weight='700' fill='%23c4914a' text-anchor='middle'>AG</text></svg>">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 
@@ -20,11 +20,13 @@
       <ul class="nav-links">
         <li><a href="#hero">About</a></li>
         <li><a href="#focus">Focus Areas</a></li>
+        <li><a href="#projects">Projects</a></li>
         <li><a href="#resume">Resume</a></li>
-        <li><a href="https://www.linkedin.com/in/alex-gerardi/" target="_blank" rel="noopener">LinkedIn</a></li>
         <li><a href="#writing">Writing</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><a href="https://www.linkedin.com/in/alex-gerardi/" target="_blank" rel="noopener">LinkedIn</a></li>
       </ul>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"></button>
       <button class="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -47,7 +49,61 @@
           </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
-          <canvas id="particles"></canvas>
+          <svg viewBox="0 20 500 330" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id="pj-sun" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(196,145,74,0.32)"/>
+                <stop offset="60%" stop-color="rgba(196,145,74,0.12)"/>
+                <stop offset="100%" stop-color="rgba(196,145,74,0)"/>
+              </radialGradient>
+            </defs>
+
+            <!-- sun glow -->
+            <circle cx="305" cy="160" r="130" fill="url(#pj-sun)"/>
+            <circle class="pj-sun-ring" cx="305" cy="160" r="56" fill="none" stroke-width="1.2"/>
+
+            <!-- ground -->
+            <line class="pj-frame" x1="30" y1="330" x2="470" y2="330" stroke-width="1.6"/>
+            <g class="pj-grass" stroke-width="1.2">
+              <line x1="60" y1="330" x2="66" y2="322"/><line x1="70" y1="330" x2="74" y2="324"/>
+              <line x1="430" y1="330" x2="436" y2="322"/><line x1="442" y1="330" x2="446" y2="325"/>
+            </g>
+
+            <!-- samson post (A-frame) -->
+            <g class="pj-frame" stroke-width="3" fill="none" stroke-linecap="round">
+              <line x1="222" y1="330" x2="250" y2="180"/>
+              <line x1="278" y1="330" x2="250" y2="180"/>
+              <line x1="232" y1="276" x2="268" y2="276"/>
+            </g>
+
+            <!-- walking beam + horsehead (rocks) -->
+            <g class="pj-beam">
+              <line class="pj-frame" x1="140" y1="178" x2="356" y2="178" stroke-width="5" stroke-linecap="round"/>
+              <path class="pj-accent" d="M 140 158 A 30 30 0 0 0 140 198 L 152 192 L 152 164 Z"/>
+              <line class="pj-rod" x1="143" y1="198" x2="143" y2="296" stroke-width="1.6"/>
+            </g>
+
+            <!-- wellhead -->
+            <g class="pj-frame" stroke-width="2.4" stroke-linecap="round">
+              <line x1="143" y1="296" x2="143" y2="330"/>
+              <line x1="132" y1="304" x2="154" y2="304"/>
+              <line x1="135" y1="316" x2="151" y2="316"/>
+            </g>
+
+            <!-- crank + counterweight (spins) -->
+            <g class="pj-crank">
+              <circle class="pj-frame" cx="352" cy="296" r="26" fill="none" stroke-width="2.4"/>
+              <line class="pj-frame" x1="352" y1="296" x2="352" y2="262" stroke-width="3"/>
+              <circle class="pj-accent" cx="352" cy="268" r="9"/>
+            </g>
+            <!-- crank stand -->
+            <g class="pj-frame" stroke-width="3" stroke-linecap="round">
+              <line x1="338" y1="330" x2="352" y2="298"/>
+              <line x1="366" y1="330" x2="352" y2="298"/>
+            </g>
+            <!-- pitman arm -->
+            <line class="pj-rod" x1="356" y1="180" x2="352" y2="268" stroke-width="1.8" opacity="0.85"/>
+          </svg>
         </div>
       </div>
       <div class="hero-scroll-hint">
@@ -90,7 +146,7 @@
             <div class="card-header">
               <h3>Oil &amp; Gas Operations</h3>
             </div>
-            <p>Hands-on mechanical background alongside formal energy education. Interning at Plainview Oil Company starting May 2026, focused on land and mineral acquisition in Oklahoma.</p>
+            <p>Hands-on mechanical background alongside formal energy education. Currently interning at Plainview Oil Company, focused on land and mineral acquisition in Oklahoma.</p>
             <div class="card-tags">
               <span>Plainview Oil Co.</span><span>Oklahoma</span><span>Upstream</span>
             </div>
@@ -130,6 +186,32 @@
       </div>
     </section>
 
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="container">
+        <h2 class="section-title fade-in">Projects</h2>
+        <p class="section-subtitle fade-in">Tools I've built applying energy knowledge to real problems.</p>
+        <div class="projects-wide-list">
+
+          <article class="project-card-wide fade-in">
+            <div class="project-card-wide-inner">
+              <div class="project-card-wide-info">
+                <h3>Mineral Rights Royalty Calculator</h3>
+                <p>A free, single-file web tool for mineral owners, landmen, and investors to model oil and gas royalty income. Enter your acreage, royalty rate, production assumptions, and commodity price to get live monthly and annual income projections, a price sensitivity matrix, a year-by-year decline schedule, and a lease bonus comparison tool.</p>
+                <div class="card-tags">
+                  <span>Oil &amp; Gas</span><span>Energy Finance</span><span>Vanilla JS</span>
+                </div>
+                <div class="card-links">
+                  <a href="https://aogerardi.github.io/mineralcalc" target="_blank" rel="noopener">Live Tool ↗</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
     <!-- RESUME -->
     <section id="resume">
       <div class="container">
@@ -142,10 +224,10 @@
             <h3>Experience</h3>
             <ul class="timeline">
               <li>
-                <span class="timeline-date">May 2026</span>
+                <span class="timeline-date">May 2026 – Present</span>
                 <strong>Land &amp; Mineral Acquisition Intern</strong>
                 <span class="timeline-company"><a href="https://plainviewoilcompany.com/" target="_blank" rel="noopener">Plainview Oil Company</a> — Norman, OK</span>
-                <p>Upcoming internship focused on land and mineral acquisition in the Oklahoma energy market.</p>
+                <p>Internship focused on land and mineral acquisition in the Oklahoma energy market.</p>
               </li>
               <li>
                 <span class="timeline-date">Current</span>
@@ -256,19 +338,6 @@
             <span class="writing-date">Dec 2025</span>
           </a>
 
-          <a class="writing-card fade-in" href="https://alexgerardi.substack.com/p/jerusalem-in-the-ancient-world" target="_blank" rel="noopener">
-            <span class="writing-tag history">History</span>
-            <h3>Jerusalem in the Ancient World</h3>
-            <p>Jerusalem is one of the world's oldest cities, defined by dozens of formative events shaping the city's culture, religion, and symbolic power.</p>
-            <span class="writing-date">Jan 2026</span>
-          </a>
-
-          <a class="writing-card fade-in" href="https://alexgerardi.substack.com/p/was-john-locke-a-liberal" target="_blank" rel="noopener">
-            <span class="writing-tag politics">Political Theory</span>
-            <h3>Was John Locke a Liberal?</h3>
-            <p>A Brief Exploration of Stable Liberty and the Limits of Early Liberal Thought</p>
-            <span class="writing-date">Feb 2026</span>
-          </a>
 
           <a class="writing-card fade-in" href="https://alexgerardi.substack.com/p/benjamin-constant-modern-and-ancient" target="_blank" rel="noopener">
             <span class="writing-tag politics">Political Theory</span>
@@ -277,12 +346,6 @@
             <span class="writing-date">Feb 2026</span>
           </a>
 
-          <a class="writing-card fade-in" href="https://alexgerardi.substack.com/p/institutional-performance-profile" target="_blank" rel="noopener">
-            <span class="writing-tag academic">Academic</span>
-            <h3>JMU: Institutional Performance Profile</h3>
-            <p>James Madison University performance profile in comparison to peer universities.</p>
-            <span class="writing-date">Mar 2026</span>
-          </a>
 
           <a class="writing-card fade-in" href="https://lifeawareness.substack.com/" target="_blank" rel="noopener">
             <span class="writing-tag newsletter">Newsletter</span>
@@ -305,8 +368,7 @@
         <p class="section-subtitle fade-in">Interested in connecting? Reach out.</p>
 
         <div class="contact-wrap fade-in">
-          <div class="contact-email-cta">
-            <p>I'm a landman-in-training with a background in trade work, a degree in energy, and a genuine interest in the business of putting deals together. Always open to a conversation.</p>
+          <div class="contact-email-btn">
             <a href="mailto:alexogerardi@gmail.com" class="btn">Send Me an Email</a>
           </div>
 
@@ -320,10 +382,6 @@
               <a href="https://www.linkedin.com/in/alex-gerardi/" target="_blank" rel="noopener" aria-label="LinkedIn">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                 LinkedIn
-              </a>
-              <a href="mailto:alexogerardi@gmail.com" aria-label="Email">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Email
               </a>
             </div>
           </div>
@@ -349,6 +407,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
