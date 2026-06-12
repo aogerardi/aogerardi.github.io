@@ -106,3 +106,22 @@ window.addEventListener('scroll', revealInView, { passive: true });
 window.addEventListener('resize', revealInView, { passive: true });
 window.addEventListener('load', revealInView);
 revealInView();
+
+// --- Reduced motion: pause SVG (SMIL) animations like the horizon strip ---
+// CSS handles keyframe animations; SMIL doesn't respond to media queries,
+// so it has to be paused from script.
+const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function syncMotion() {
+  document.querySelectorAll('svg').forEach(svg => {
+    if (typeof svg.pauseAnimations !== 'function') return;
+    if (motionQuery.matches) {
+      svg.pauseAnimations();
+    } else {
+      svg.unpauseAnimations();
+    }
+  });
+}
+
+syncMotion();
+motionQuery.addEventListener('change', syncMotion);

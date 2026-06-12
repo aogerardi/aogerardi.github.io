@@ -473,6 +473,15 @@ html[data-theme="light"] .pj-grass { stroke: #b8a88e; }
 
 @media (prefers-reduced-motion: reduce) {
   .pj-beam, .pj-crank { animation: none; }
+
+  html { scroll-behavior: auto; }
+
+  /* Show all content immediately, no reveal transitions */
+  html.js-anim .fade-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .hero-scroll-hint {
