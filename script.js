@@ -34,7 +34,6 @@ if (themeToggle) {
   themeToggle.addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme');
     applyTheme(current === 'light' ? 'dark' : 'light');
-    reinitParticles();
   });
 }
 
@@ -42,8 +41,6 @@ const navbar = document.getElementById('navbar');
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks = document.querySelectorAll('.nav-links a');
 const sections = document.querySelectorAll('main section[id]');
-
-const canvas = document.getElementById('particles');
 
 // --- Navbar scroll state ---
 window.addEventListener('scroll', () => {
@@ -109,114 +106,3 @@ window.addEventListener('scroll', revealInView, { passive: true });
 window.addEventListener('resize', revealInView, { passive: true });
 window.addEventListener('load', revealInView);
 revealInView();
-
-// --- Particle canvas ---
-let reinitParticles = () => {};
-
-(function initParticles() {
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  let animId;
-
-  const DARK_COLORS  = ['#c4914a', '#d4a86a', '#f0ead8'];
-  const LIGHT_COLORS = ['#b85c38', '#c4724a', '#7a6a58'];
-  const COUNT = 55;
-
-  function getColors() {
-    return document.documentElement.getAttribute('data-theme') === 'light'
-      ? LIGHT_COLORS : DARK_COLORS;
-  }
-
-  function resize() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
-
-  function createParticle() {
-    const colors = getColors();
-    return {
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.8 + 0.4,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      alpha: Math.random() * 0.5 + 0.2,
-    };
-  }
-
-  function init() {
-    resize();
-    particles = Array.from({ length: COUNT }, createParticle);
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw connecting lines between nearby particles
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 90) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(196, 145, 74, ${0.12 * (1 - dist / 90)})`;
-          ctx.lineWidth = 0.6;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-
-    // Draw particles
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = p.alpha;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      p.x += p.vx;
-      p.y += p.vy;
-
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-    });
-
-    animId = requestAnimationFrame(draw);
-  }
-
-  // Pause animation when not visible (performance)
-  const visibilityObserver = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      if (!animId) draw();
-    } else {
-      cancelAnimationFrame(animId);
-      animId = null;
-    }
-  });
-
-  visibilityObserver.observe(canvas);
-
-  window.addEventListener('resize', () => {
-    cancelAnimationFrame(animId);
-    animId = null;
-    init();
-    draw();
-  }, { passive: true });
-
-  reinitParticles = () => {
-    cancelAnimationFrame(animId);
-    animId = null;
-    init();
-    draw();
-  };
-
-  init();
-  draw();
-})();

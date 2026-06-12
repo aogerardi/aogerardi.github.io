@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# Local tooling and notes (not part of the site)
+.claude/
+CLAUDE_1.md
+github-profile-README.md
