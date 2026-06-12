@@ -956,10 +956,9 @@ html[data-theme="light"] .project-card-wide .card-links a:hover {
    CONTACT
    ===================== */
 #contact {
-  padding: 100px 0;
+  padding: 132px 0 0;
   background: var(--bg-secondary);
   clip-path: polygon(0 0, 100% 32px, 100% 100%, 0 100%);
-  padding-top: 132px;
 }
 
 .contact-wrap {
@@ -1003,6 +1002,52 @@ html[data-theme="light"] .project-card-wide .card-links a:hover {
   border-color: var(--accent-teal);
   background: rgba(196, 145, 74, 0.07);
 }
+
+/* =====================
+   HORIZON STRIP
+   ===================== */
+/* Default (:root) values are the dark theme: night field. The light theme
+   overrides below repaint it as dusk. */
+.horizon-strip {
+  margin-top: 80px;
+  line-height: 0;
+}
+
+.horizon-strip svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hz-sky-top { stop-color: #161210; }
+.hz-sky-mid { stop-color: #241c12; }
+.hz-sky-bot { stop-color: #3a2a16; }
+.hz-glow-in  { stop-color: rgba(196, 145, 74, 0.34); }
+.hz-glow-out { stop-color: rgba(196, 145, 74, 0); }
+.hz-sun { fill: #c4914a; opacity: 0.55; }
+.hz-stars { fill: #f0ead8; opacity: 0.5; }
+.hz-ground { fill: #0e0b08; }
+.hz-ground-line { stroke: #3a3026; }
+.hz-grass { stroke: #3a3026; }
+.hz-pj1 { fill: #0e0b08; stroke: #0e0b08; }
+.hz-pj2 { fill: #0a0805; stroke: #0a0805; }
+.hz-pj3 { fill: #14100b; stroke: #14100b; opacity: 0.95; }
+.hz-riglight { fill: #c4914a; }
+
+html[data-theme="light"] .hz-sky-top { stop-color: #f0ebe0; }
+html[data-theme="light"] .hz-sky-mid { stop-color: #f3e3cb; }
+html[data-theme="light"] .hz-sky-bot { stop-color: #ecc99c; }
+html[data-theme="light"] .hz-glow-in  { stop-color: rgba(196, 114, 74, 0.45); }
+html[data-theme="light"] .hz-glow-out { stop-color: rgba(196, 114, 74, 0); }
+html[data-theme="light"] .hz-sun { fill: #cd7a4e; opacity: 0.85; }
+html[data-theme="light"] .hz-stars { display: none; }
+html[data-theme="light"] .hz-ground { fill: #5a4636; }
+html[data-theme="light"] .hz-ground-line { stroke: #4a3a2c; }
+html[data-theme="light"] .hz-grass { stroke: #4a3a2c; }
+html[data-theme="light"] .hz-pj1 { fill: #4a3a2c; stroke: #4a3a2c; }
+html[data-theme="light"] .hz-pj2 { fill: #42332a; stroke: #42332a; }
+html[data-theme="light"] .hz-pj3 { fill: #564536; stroke: #564536; opacity: 0.92; }
+html[data-theme="light"] .hz-riglight { display: none; }
 
 /* =====================
    FOOTER
