@@ -1,6 +1,6 @@
 # Alex Gerardi
 
-Energy Management student at the **University of Oklahoma** (Robert M. Zinke Program, Price College of Business), with a minor in Political Science. Member of **AAPL** and **EMSA**. Starting as a land and mineral acquisition intern at **Plainview Oil Company** in May 2026.
+Energy Management student at the **University of Oklahoma** (Robert M. Zinke Program, Price College of Business), with a minor in Political Science. Member of **AAPL** and **EMSA**. Currently a land and mineral acquisition intern at **Plainview Oil Company**, since May 2026.
 
 ---
 
