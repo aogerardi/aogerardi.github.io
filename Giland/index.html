@@ -165,7 +165,8 @@
     .ba-section .sec-title { color: var(--white); }
     .ba-section .sec-sub { color: rgba(255,255,255,.55); }
 
-    .ba-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 36px; }
+    .ba-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px; }
+    .ba-grid > div:last-child { grid-column: 1 / -1; max-width: 700px; margin: 0 auto; width: 100%; }
     .ba-item-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 14px; }
 
     .ba-slider {
@@ -317,6 +318,8 @@
       .nav-links { display: none; }
       .hamburger { display: flex; }
       .trust-bar { gap: 28px; padding: 20px 24px; }
+      .ba-grid { grid-template-columns: 1fr; }
+      .ba-grid > div:last-child { max-width: 100%; }
       .gal-grid { grid-template-columns: 1fr 1fr; }
       .gal-item.wide { grid-column: span 2; }
       footer { padding: 24px; flex-direction: column; text-align: center; }
