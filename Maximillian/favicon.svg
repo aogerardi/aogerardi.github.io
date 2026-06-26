@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#glow)" stroke="#F5FF00" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- rim -->
+    <line x1="3" y1="6" x2="29" y2="6"/>
+    <!-- bowl: two curves meeting at base -->
+    <path d="M3 6 Q7 21 16 22 Q25 21 29 6"/>
+    <!-- stem -->
+    <line x1="16" y1="22" x2="16" y2="27"/>
+    <!-- foot -->
+    <line x1="10" y1="27" x2="22" y2="27"/>
+  </g>
+</svg>
