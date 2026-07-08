@@ -748,13 +748,15 @@ document.querySelectorAll('[data-goto-book]').forEach(a => a.addEventListener('c
 /* ── option-chip helper ── */
 function chipGroup(id, onPick){
   const g = document.getElementById(id);
-  g.querySelectorAll('.opt').forEach(b => b.addEventListener('click', e => {
+  // Options are `.opt` chips or `.slot` day-tiles (the booking day picker uses slots)
+  const sel = '.opt, .slot';
+  g.querySelectorAll(sel).forEach(b => b.addEventListener('click', e => {
     e.preventDefault();
-    g.querySelectorAll('.opt').forEach(o => o.classList.remove('sel'));
+    g.querySelectorAll(sel).forEach(o => o.classList.remove('sel'));
     b.classList.add('sel');
     onPick && onPick(b);
   }));
-  return () => g.querySelector('.opt.sel');
+  return () => g.querySelector('.opt.sel, .slot.sel');
 }
 
 /* ── quote configurator ── */
@@ -822,10 +824,27 @@ const getBSvc  = chipGroup('bService');
 
 /* ── submit ── */
 const TO = 'brilliance716@xtremeepoxycoatings.com';
+// Google Sheet logging via Apps Script web app (see SHEETS-SETUP.md / leads-sheet.gs).
+// Formspree stays the source of truth for email + the success panel; this is a
+// fire-and-forget parallel log. To repoint at a new sheet, redeploy the script
+// and swap this /exec URL.
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxdF6ImruzV7NQUw6Ui2tcIJQhesqzfvkG1-7LQDwjoely736x5EtsMrKea93HpE3ojbA/exec';
 const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 function need(el, bad){ el.classList.toggle('bad', bad); return !bad; }
 function val(id){ return document.getElementById(id).value.trim(); }
 function today(){ const t = new Date(); return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0'); }
+// Append the tracker row to the Google Sheet. text/plain avoids a CORS
+// preflight (Apps Script can't answer OPTIONS); we never read the response.
+function logToSheet(row){
+  if(!SHEET_URL) return;
+  try {
+    fetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ row: row })
+    }).catch(() => {});
+  } catch { /* never let logging affect the submit flow */ }
+}
 let lastMail = '', lastRow = '';
 
 async function finish(type, fields, trackerCols, btn){
@@ -836,6 +855,9 @@ async function finish(type, fields, trackerCols, btn){
     '\n\n--- TRACKER ROW ---\n' + trackerCols.join('\t');
   lastMail = 'mailto:' + TO + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   lastRow = trackerCols.join('\t');
+
+  // Log to the Google Sheet in parallel (fire-and-forget; email is the source of truth)
+  logToSheet(trackerCols);
 
   const origLabel = btn.textContent;
   btn.disabled = true; btn.textContent = 'Sending…';
