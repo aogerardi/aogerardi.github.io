@@ -294,6 +294,15 @@ footer{border-top:1px solid var(--line);background:var(--panel);padding:60px 0 3
 /* ── gallery ── */
 #gallery{border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(24,19,32,.55),transparent 55%)}
 .gal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+.ba{position:relative;aspect-ratio:16/8;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#0d0b12;user-select:none;-webkit-user-select:none}
+.ba .ba-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ba-before{position:absolute;inset:0;clip-path:inset(0 50% 0 0)}
+.ba-handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:rgba(237,238,242,.9);z-index:3;transform:translateX(-1px);pointer-events:none}
+.ba-grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(8,7,11,.85);border:1px solid rgba(237,238,242,.5);display:flex;align-items:center;justify-content:center;gap:2px;color:var(--text)}
+.ba-tag{position:absolute;bottom:14px;z-index:2;font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:rgba(8,7,11,.72);border:1px solid var(--line);color:var(--text);pointer-events:none}
+.ba-tag.l{left:14px}.ba-tag.r{right:14px}
+.ba input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;z-index:4;touch-action:none}
+@media(max-width:720px){.ba{aspect-ratio:4/3}}
 .gcard.wide{grid-column:1/-1}
 .gcard.wide .gstage{aspect-ratio:8/3}
 .gcard.soon{cursor:default}
@@ -478,6 +487,29 @@ body.gal-open{overflow:hidden}
       <p>Garages, pool decks, patios and basements, finished by our crew. Pick a type to see the full set.</p>
     </div>
     <div class="gal-grid" id="galGrid"></div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="sec alt" id="beforeafter">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Before &amp; after</span>
+      <h2>Same job. Same slab.</h2>
+      <p>A commercial build-out, from bare patched concrete to a sealed flake floor. Drag the handle.</p>
+    </div>
+    <div class="ba reveal" id="ba">
+      <img class="ba-img" src="img/72.jpg" alt="After: finished commercial flake floor" loading="lazy" decoding="async">
+      <div class="ba-before" id="baBefore" aria-hidden="true">
+        <img class="ba-img" src="img/93.jpg" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="ba-handle" id="baHandle" aria-hidden="true">
+        <span class="ba-grip"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="15 18 9 12 15 6"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg></span>
+      </div>
+      <span class="ba-tag l" aria-hidden="true">Before</span>
+      <span class="ba-tag r" aria-hidden="true">After</span>
+      <input type="range" id="baRange" min="0" max="100" value="50" step="0.5" aria-label="Compare before and after: slide to reveal">
+    </div>
   </div>
 </section>
 
@@ -812,14 +844,23 @@ const GAL = [
       'img/79.jpg',
       'img/80.jpg',
       'img/81.jpg',
-      'img/82.jpg'
+      'img/82.jpg',
+      'img/83.jpg',
+      'img/84.jpg',
+      'img/85.jpg',
+      'img/86.jpg',
+      'img/87.jpg',
+      'img/88.jpg',
+      'img/89.jpg',
+      'img/90.jpg',
+      'img/91.jpg',
+      'img/92.jpg'
     ] },
     { key:'patio', name:'Patios & Porches',
     shots:[
       'img/24.jpg',
       'img/25.jpg',
       'img/26.jpg',
-      'img/27.jpg',
       'img/28.jpg',
       'img/29.jpg',
       'img/30.jpg',
@@ -837,7 +878,6 @@ const GAL = [
       'img/39.jpg',
       'img/40.jpg',
       'img/41.jpg',
-      'img/42.jpg',
       'img/43.jpg',
       'img/44.jpg',
       'img/45.jpg',
@@ -847,7 +887,6 @@ const GAL = [
     shots:[
       'img/47.jpg',
       'img/48.jpg',
-      'img/49.jpg',
       'img/50.jpg',
       'img/51.jpg',
       'img/52.jpg',
@@ -864,6 +903,23 @@ const GAL = [
 
 /* one embedded copy per photo serves both the card and the expanded view */
 GAL.forEach(job => job.shots = job.shots.map(u => ({ src:u, thumb:u })));
+
+/* before/after slider */
+const baRange = document.getElementById('baRange');
+if(baRange){
+  const baBefore = document.getElementById('baBefore'), baHandle = document.getElementById('baHandle');
+  const baSet = v => { v = Math.max(0, Math.min(100, v)); baRange.value = v;
+    baBefore.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)'; baHandle.style.left = v + '%'; };
+  baRange.addEventListener('input', () => baSet(+baRange.value));
+  const baBox = document.getElementById('ba');
+  let baDrag = false;
+  const baFromX = x => { const r = baBox.getBoundingClientRect(); baSet((x - r.left) / r.width * 100); };
+  baBox.addEventListener('pointerdown', e => { baDrag = true; baFromX(e.clientX); try{ baBox.setPointerCapture(e.pointerId); }catch(_){} });
+  baBox.addEventListener('pointermove', e => { if(baDrag) baFromX(e.clientX); });
+  baBox.addEventListener('pointerup', () => baDrag = false);
+  baBox.addEventListener('pointercancel', () => baDrag = false);
+  baSet(50);
+}
 
 const galGrid = document.getElementById('galGrid');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
