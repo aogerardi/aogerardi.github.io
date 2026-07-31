@@ -5,3 +5,17 @@
 .claude/
 CLAUDE_1.md
 github-profile-README.md
+
+# Secrets & local environments — never commit
+api key*.rtf
+.env
+.venv/
+
+# Separate projects living in this folder (not part of the site)
+Piedmondo/
+claude-api-course/
+
+# Cleanup folders
+_notes/
+_to_delete/
+_archive/
